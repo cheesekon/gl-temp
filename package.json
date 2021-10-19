@@ -15,6 +15,9 @@
     "sequelize": "^6.6.5",
     "web3": "^1.5.2"
   },
+  "scripts": {
+    "start": "node server.js"
+  },
   "devDependencies": {
     "ethereum-waffle": "^3.4.0"
   }
