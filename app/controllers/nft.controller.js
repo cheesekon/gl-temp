@@ -6,8 +6,10 @@ const MyNftContract = W3.MyNftContract
 
 // Create and Save a new Nft
 exports.create = async (req, res) => {
+  const {nftId} = req.body
+
   // Validate request
-  if (!req.body.nftId) {
+  if (!nftId) {
     res.status(400).send({
       message: 'nftId can not be empty!'
     })
@@ -15,24 +17,24 @@ exports.create = async (req, res) => {
   }
 
   // Validate blockchain data
-  try {
-    const isNftExist = await MyNftContract.methods.exist(req.body.nftId).call()
-    if (isNftExist) {
-      res.status(400).send({
-        message: 'nft is already exists!'
-      })
-      return
-    }
-  } catch (err) {
-    res.status(400).send({
-      message: err.message || err.data.message
-    })
-    return
-  }
+  // try {
+  //   const isNftExist = await MyNftContract.methods.exist(req.body.nftId).call()
+  //   if (isNftExist) {
+  //     res.status(400).send({
+  //       message: 'nft is already exists!'
+  //     })
+  //     return
+  //   }
+  // } catch (err) {
+  //   res.status(400).send({
+  //     message: err.message || err.data.message
+  //   })
+  //   return
+  // }
 
   // Create a Nft
   const nft = {
-    nftId: req.body.nftId,
+    nftId: nftId,
     name: req.body.name,
     img: req.body.img,
     isLending: req.body.isLending || false,
