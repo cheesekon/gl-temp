@@ -17,13 +17,13 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.BOOLEAN
     },
     price: {
-      type: Sequelize.DECIMAL
+      type: Sequelize.FLOAT
     },
     days: {
       type: Sequelize.INTEGER
     },
     collateral: {
-      type: Sequelize.DECIMAL
+      type: Sequelize.DOUBLE
     },
     borrower: {
       type: Sequelize.STRING
