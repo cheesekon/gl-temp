@@ -25,5 +25,5 @@ module.exports = app => {
   // Delete all Tutorials
   router.delete("/", nft.deleteAll);
 
-  app.use('/api/nft', router);
+  app.use('/v1/nft', router);
 };

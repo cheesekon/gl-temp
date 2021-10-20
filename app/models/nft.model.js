@@ -4,6 +4,12 @@ module.exports = (sequelize, Sequelize) => {
     nftId: {
       type: Sequelize.STRING
     },
+    gamelandNftId: {
+      type: Sequelize.STRING
+    },
+    contractAddress: {
+      type: sequelize.STRING
+    },
     name: {
       type: Sequelize.STRING
     },

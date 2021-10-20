@@ -21,5 +21,6 @@ db.sequelize = sequelize;
 
 // db.tutorials = require("./tutorial.model.js")(sequelize, Sequelize);
 db.nft = require("./nft.model.js")(sequelize, Sequelize);
+db.contracts = require("./contracts.model.js")(sequelize, Sequelize);
 
 module.exports = db;
