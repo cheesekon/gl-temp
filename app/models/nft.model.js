@@ -8,7 +8,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING
     },
     contractAddress: {
-      type: sequelize.STRING
+      type: Sequelize.STRING
     },
     name: {
       type: Sequelize.STRING

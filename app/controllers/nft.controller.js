@@ -47,7 +47,9 @@ exports.create = async (req, res) => {
     borrower: req.body.borrower,
     borrowAt: req.body.borrowAt,
     owner: req.body.owner || '0x0000000000000000000000000000000000000000',
-    originOwner: req.body.originOwner || '0x0000000000000000000000000000000000000000'
+    originOwner: req.body.originOwner || '0x0000000000000000000000000000000000000000',
+    contractAddress: req.body.contractAddress || '',
+    gamelandNftId: req.body.gamelandNftId || '',
   }
 
   // Save Nft in the database
