@@ -15,5 +15,5 @@ module.exports = app => {
   // Delete a contract with id
   router.delete("/:id", contracts.delete);
 
-  app.use('/v1/contracts', router);
+  app.use('/v0/contracts', router);
 };

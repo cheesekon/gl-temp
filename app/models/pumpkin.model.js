@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
   // DataTypes - https://sequelize.org/master/manual/model-basics.html#data-types
-  const Nft = sequelize.define("nft", {
+  const Pumpkin = sequelize.define("pumpkin", {
     nftId: {
       type: Sequelize.STRING
     },
@@ -51,5 +51,5 @@ module.exports = (sequelize, Sequelize) => {
     }
   });
 
-  return Nft;
+  return Pumpkin;
 };

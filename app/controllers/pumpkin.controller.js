@@ -1,7 +1,7 @@
 const db = require('../models')
 const Utils = require('../utils')
 const utils = new Utils()
-const Nft = db.nft
+const Pumpkin = db.pumpkin
 const TestNfts = db.testnfts
 const Contract = db.contracts
 const Op = db.Sequelize.Op
@@ -56,7 +56,7 @@ exports.create = async (req, res) => {
   }
 
   // Save Nft in the database
-  Nft.create(nft)
+  Pumpkin.create(nft)
     .then((data) => {
       res.send({
         code: 1,
@@ -73,44 +73,7 @@ exports.create = async (req, res) => {
 
 // Create and Save a new Nft
 exports.mint = async (req, res) => {
-  const contractAddress = req.body.contractAddress
   try{
-    const digits = 4
-    
-    const contract = await Contract.findAll({
-      where: {
-        address: contractAddress
-      }
-    })
-    if(!contract.length){
-      res.status(500).send({
-        code: 0,
-        message: 'Contracts is not existed.'
-      })
-      return
-    }
-
-    const aNft = await TestNfts.findAll({ 
-      where: {
-        used: 0
-      },
-      limit: 1
-    })
-    if(!aNft.length){
-      res.status(500).send({
-        code: 0,
-        message: 'NFTs sold out.'
-      })
-      return
-    }
-
-    if(String(aNft[0].id).length > digits) {
-      res.status(500).send({
-        code: 0,
-        message: 'NFTs overflow.'
-      })
-      return
-    }
 
     // Create a Nft
     const nft = {
@@ -134,13 +97,13 @@ exports.mint = async (req, res) => {
 
 
     // Save Nft in the database
-    Nft.create(nft)
+    Pumpkin.create(nft)
       .then(async (data) => {
         await TestNfts.update({
           used: 1
         },{
           where: {
-            id: aNft[0].id
+            id: req.body.nftId
           }
         })
         res.send({
@@ -178,7 +141,7 @@ exports.findAll = (req, res) => {
   })
   var condition = keys.length ? queryObj : null
 
-  Nft.findAll({ where: condition })
+  Pumpkin.findAll({ where: condition })
     .then((data) => {
       res.send({
         code: 1,
@@ -219,7 +182,7 @@ exports.findNft = (req, res) => {
 exports.findOne = (req, res) => {
   const nftId = req.params.nftId
 
-  Nft.findByPk(nftId)
+  Pumpkin.findByPk(nftId)
     .then((data) => {
       res.send({
         code: 1,
@@ -238,7 +201,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id
 
-  Nft.update(req.body, {
+  Pumpkin.update(req.body, {
     where: { id: id }
   })
     .then((num) => {
@@ -266,7 +229,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const nftId = req.params.nftId
 
-  Nft.destroy({
+  Pumpkin.destroy({
     where: { nftId: nftId }
   })
     .then((num) => {
@@ -292,7 +255,7 @@ exports.delete = (req, res) => {
 
 // Delete all Nfts from the database.
 exports.deleteAll = (req, res) => {
-  Nft.destroy({
+  Pumpkin.destroy({
     where: {},
     truncate: false
   })
@@ -312,7 +275,7 @@ exports.deleteAll = (req, res) => {
 
 // Find all published Nfts
 exports.findAllLending = (req, res) => {
-  Nft.findAll({ where: { isLending: true } })
+  Pumpkin.findAll({ where: { isLending: true } })
     .then((data) => {
       res.send({
         code: 0,

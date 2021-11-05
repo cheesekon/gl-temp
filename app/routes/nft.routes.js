@@ -7,8 +7,14 @@ module.exports = app => {
   // Create a new Tutorial
   router.post("/", nft.create);
 
+  // mint a new Tutorial
+  router.post("/mint", nft.mint);
+
   // Retrieve all Tutorials
   router.get("/", nft.findAll);
+
+  // Retrieve a nft from test nfts
+  router.get("/one", nft.findNft);
 
   // Retrieve all published Tutorials
   router.get("/lending", nft.findAllLending);
@@ -17,7 +23,7 @@ module.exports = app => {
   router.get("/:nftId", nft.findOne);
 
   // Update a Tutorial with id
-  router.put("/:nftId", nft.update);
+  router.put("/:id", nft.update);
 
   // Delete a Tutorial with id
   router.delete("/:nftId", nft.delete);
@@ -25,5 +31,5 @@ module.exports = app => {
   // Delete all Tutorials
   router.delete("/", nft.deleteAll);
 
-  app.use('/v1/nft', router);
+  app.use('/v0/nft', router);
 };
