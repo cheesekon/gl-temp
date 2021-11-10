@@ -11,16 +11,17 @@ const http = axios.create({
   baseURL: baseUrl,
   timeout: 10000,
   headers: {
-    Authorization: process.env.NFTPORTS_KEY
+    Authorization: process.env.NFTPORTS_KEY,
+    'Cache-Control': 'no-cache'
   }
 })
 
 // Retrieve NFTs which added in gameland from nftports
 exports.getAll = async (req, res) => {
-  const query = req.query
-  const queryStr = querystring.stringify(query)
-  // let addresses = ''
-  let url = `${baseUrl}/assets?asset_contract_addresses=0xf2d47bbb40f9ffa447687b4708076f6ee3e9134c&${queryStr}`
+  // const query = req.query
+  // const queryStr = querystring.stringify(query)
+  // // let addresses = ''
+  // let url = `${baseUrl}/assets?asset_contract_address=0xf2d47bbb40f9ffa447687b4708076f6ee3e9134c&${queryStr}`
 
   // query multi nft contracts
   // try {
@@ -42,40 +43,52 @@ exports.getAll = async (req, res) => {
   //   })
   // }
 
-  http
-    .get(url)
-    .then(async (response) => {
-      const { status, data } = response
-      if (status === 200) {
-        const {assets} = data
-
-        const debts = await Opensea.findAll()
-        const result = debts.length ? assets.map(item =>{
-          const contractAddress = item.asset_contract.address
-          const tokenId = item.token_id
-          const match = debts.find(debt => {
-            return debt.nftId === tokenId && debt.contractAddress === contractAddress
-          })
-          return Object.assign(item, match.dataValues)
-        }) : assets
-
-        res.send({
-          code: 1,
-          data: result
-        })
-      } else {
-        res.status(500).send({
-          code: 0,
-          message: 'Some error occurred while retrieving nfts.'
-        })
-      }
+  Opensea.findAll()
+    .then((data) => {
+      res.send({
+        code: 1,
+        data: data
+      })
     })
     .catch((err) => {
       res.status(500).send({
         code: 0,
-        message: err.message || 'Some error occurred while retrieving nfts.'
+        message: err.message || 'Some error occurred while retrieving nft.'
       })
     })
+  // http
+  //   .get(url)
+  //   .then(async (response) => {
+  //     const { status, data } = response
+  //     if (status === 200) {
+  //       const {assets} = data
+  //       const debts = await Opensea.findAll()
+  //       const result = debts.length ? assets.map(item =>{
+  //         const contractAddress = item.asset_contract.address
+  //         const tokenId = item.token_id
+  //         const match = debts.find(debt => {
+  //           return debt.nftId === tokenId && debt.contractAddress === contractAddress
+  //         })
+  //         return Object.assign(item, match.dataValues)
+  //       }) : assets
+        
+  //       res.send({
+  //         code: 1,
+  //         data: result
+  //       })
+  //     } else {
+  //       res.status(500).send({
+  //         code: 0,
+  //         message: 'Some error occurred while retrieving nfts.'
+  //       })
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).send({
+  //       code: 0,
+  //       message: err.message || 'Some error occurred while retrieving nfts.'
+  //     })
+  //   })
 }
 
 // Retrieve NFT details
