@@ -40,6 +40,9 @@ module.exports = (sequelize, Sequelize) => {
     },
     isExpired: {
       type: Sequelize.BOOLEAN
+    },
+    standard: {
+      type: Sequelize.STRING
     }
   });
 

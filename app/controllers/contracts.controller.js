@@ -13,6 +13,7 @@ exports.create = async (req, res) => {
   if (!address) {
     res.status(400).send({
       message: 'contract address can not be empty!'
+
     })
     return
   }
@@ -35,11 +36,13 @@ exports.create = async (req, res) => {
       res.status(500).send({
         code: 0,
         message: err.message || 'Some error occurred while creating the Contract.'
+
       })
     })
 }
 
 // Retrieve all Contracts from the database.
+
 exports.findAll = (req, res) => {
   const query = req.query
   // var condition = originOwner ? { originOwner: { [Op.like]: `%${originOwner}%` } } : null;

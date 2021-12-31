@@ -9,11 +9,7 @@ const utils = new Utils()
 const baseUrl = 'https://rinkeby-api.opensea.io/api/v1'
 const http = axios.create({
   baseURL: baseUrl,
-  timeout: 10000,
-  headers: {
-    Authorization: process.env.NFTPORTS_KEY,
-    'Cache-Control': 'no-cache'
-  }
+  timeout: 10000
 })
 
 // Retrieve NFTs which added in gameland from nftports
@@ -71,7 +67,7 @@ exports.getAll = async (req, res) => {
   //         })
   //         return Object.assign(item, match.dataValues)
   //       }) : assets
-        
+
   //       res.send({
   //         code: 1,
   //         data: result
@@ -233,70 +229,103 @@ exports.insert = (req, res) => {
           message: err.message || 'Some error occurred while deposit the Nft.'
         })
       })
-  } catch (error) {}
+  } catch (error) { }
 }
+const retrieveAssets = async () => {
+  let assets = []
+  let defaultOffset = 0
+  const addedContracts = {}
 
+  // get contracts
+  const contractsData = await Contracts.findAll()
+  contractsData.forEach((item) => {
+    const key = item.address.toLowerCase()
+    addedContracts[key] = item.id
+  })
+
+  const retrieveFN = async (offset, limit) => {
+    // return new Promise(async (resolve, reject) => {
+
+      let addresses = ''
+      let url = `${baseUrl}/assets`
+      const queryStr = `&offset=${offset}&limit=${limit}`
+
+      // Retrieve nft contract addresses which already deployed in gameland
+      try {
+
+        const added = contractsData.map((item) => {
+          return `asset_contract_addresses=${item.address}`
+        })
+        if (added.length > 0) {
+          addresses = added.join('&')
+          url += `?${addresses}&${queryStr}`
+        } else {
+          url += `?${queryStr}`
+        }
+
+        const response = await http.get(url)
+        const { status, data } = response
+        console.log(response.config.url)
+        if (status === 200) {
+          assets = assets.concat([], data.assets.map((item) => {
+            const gamelandNftId = utils.fixDigitalId(addedContracts[item.asset_contract.address.toLowerCase()], Number(item.token_id), 4)
+            return {
+              nftId: item.token_id,
+              isLending: false,
+              isBorrowed: false,
+              withdrawable: false,
+              isExpired: false,
+              price: 0,
+              days: 0,
+              collateral: 0,
+              borrower: '',
+              borrowAt: new Date(),
+              contractAddress: item.asset_contract.address,
+              originOwner: item.owner.address,
+              gamelandNftId: gamelandNftId,
+              standard: item.asset_contract.schema_name
+            }
+          }))
+          console.log(assets.length,data.assets.length);
+          if (data.assets.length === limit) {
+            defaultOffset += limit
+            await retrieveFN(defaultOffset, limit)
+         
+          }
+        }
+      } catch (error) {
+        // reject(new Error(error))
+        console.log(error);
+      }
+    // })
+  }
+  await retrieveFN(defaultOffset, 50)
+  return assets
+}
 // Retrieve NFTs which added in gameland from nftports
 exports.init = async (req, res) => {
   const query = req.query
   const queryStr = querystring.stringify(query)
-  let addresses = ''
-  let url = `${baseUrl}/assets`
-  const addedContracts = {}
   try {
-    // Retrieve nft contract addresses which already deployed in gameland
-    const contractsData = await Contracts.findAll()
-    console.log(contractsData.length)
-    contractsData.forEach((item) => {
-      const key = item.address
-      addedContracts[key] = item.id
+    const assets = await retrieveAssets()
+    console.log(assets.length);
+    res.send({
+      code: 1,
+      data: assets
     })
-    const added = contractsData.map((item) => {
-      return `asset_contract_addresses=${item.address}`
-    })
-    if (added.length > 0) {
-      addresses = added.join('&')
-      url += `?${addresses}&${queryStr}`
-    } else {
-      url += `?${queryStr}`
-    }
-
-    const response = await http.get(url)
-    const { status, data } = response
-    console.log(status, response)
-    if (status === 200) {
-      const assets = data.assets.map((item) => {
-        const gamelandNftId = utils.fixDigitalId(addedContracts[item.asset_contract.address], Number(item.token_id), 4)
-        return {
-          nftId: item.token_id,
-          isLending: false,
-          isBorrowed: false,
-          withdrawable: false,
-          isExpired: false,
-          price: 0,
-          days: 0,
-          collateral: 0,
-          borrower: '',
-          borrowAt: new Date(),
-          contractAddress:item.asset_contract.address,
-          originOwner: item.owner.address,
-          gamelandNftId: gamelandNftId
-        }
+    Opensea.bulkCreate(assets)
+      .then((bulkRes) => {
+        res.send({
+          code: 1,
+          data: assets
+        })
       })
-      Opensea.bulkCreate(assets)
-        .then((bulkRes) => {
-          res.send({
-            code: 1,
-            data: assets
-          })
+      .catch((err) => {
+        res.status(500).send({
+          code: 0,
+          message: err.message || 'Some error occurred while inited opensea assets.'
         })
-        .catch((err) => {
-          res.status(500).send({
-            code: 0,
-            message: err.message || 'Some error occurred while inited opensea assets.'
-          })
-        })
-    }
+      })
   } catch (err) {
     res.status(500).send({
       code: 0,
