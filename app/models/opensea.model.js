@@ -1,19 +1,17 @@
 module.exports = (sequelize, Sequelize) => {
   // DataTypes - https://sequelize.org/master/manual/model-basics.html#data-types
-  const Nft = sequelize.define("nft", {
+  const Opensea = sequelize.define("opensea", {
     nftId: {
       type: Sequelize.STRING
-    },
-    gamelandNftId: {
-      type: Sequelize.BIGINT
     },
     contractAddress: {
       type: Sequelize.STRING
     },
-    name: {
-      type: Sequelize.STRING
+    gamelandNftId: {
+      type: Sequelize.STRING,
+      unique: true
     },
-    img: {
+    originOwner: {
       type: Sequelize.STRING
     },
     isLending: {
@@ -43,13 +41,10 @@ module.exports = (sequelize, Sequelize) => {
     isExpired: {
       type: Sequelize.BOOLEAN
     },
-    owner: {
-      type: Sequelize.STRING
-    },
-    originOwner: {
+    standard: {
       type: Sequelize.STRING
     }
   });
 
-  return Nft;
+  return Opensea;
 };
