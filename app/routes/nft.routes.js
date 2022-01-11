@@ -26,7 +26,7 @@ module.exports = app => {
   router.put("/:id", nft.update);
 
   // Delete a Tutorial with id
-  router.delete("/:nftId", nft.delete);
+  router.delete("/:id", nft.delete);
 
   // Delete all Tutorials
   router.delete("/", nft.deleteAll);

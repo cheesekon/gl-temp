@@ -1,7 +1,13 @@
 module.exports = (sequelize, Sequelize) => {
   // DataTypes - https://sequelize.org/master/manual/model-basics.html#data-types
-  const TestNfts = sequelize.define("test-nfts", {
+  const Guilds = sequelize.define("guilds", {
     name: {
+      type: Sequelize.STRING
+    },
+    description: {
+      type: Sequelize.STRING
+    },
+    subtitle: {
       type: Sequelize.STRING
     },
     founderAddress: {
@@ -10,8 +16,20 @@ module.exports = (sequelize, Sequelize) => {
     founderEmail: {
       type: Sequelize.STRING
     },
+    level: {
+      type: Sequelize.STRING
+    },
+    membership: {
+      type: Sequelize.STRING
+    },
+    rating: {
+      type: Sequelize.STRING
+    },
+    members: {
+      type: Sequelize.BIGINT
+    }
 
   });
 
-  return TestNfts;
+  return Guilds;
 };

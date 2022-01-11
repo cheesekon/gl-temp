@@ -25,5 +25,8 @@ db.pumpkin = require("./pumpkin.model.js")(sequelize, Sequelize);
 db.contracts = require("./contracts.model.js")(sequelize, Sequelize);
 db.opensea = require("./opensea.model.js")(sequelize, Sequelize);
 db.testnfts = require("./testnfts.model.js")(sequelize, Sequelize);
+db.guilds = require("./guilds.model.js")(sequelize, Sequelize);
+db.members = require("./members.model.js")(sequelize, Sequelize);
+db.membersApply = require("./members.apply.model.js")(sequelize, Sequelize);
 
 module.exports = db;

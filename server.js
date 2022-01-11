@@ -33,6 +33,9 @@ require("./app/routes/pumpkin.routes")(app);
 require("./app/routes/nft.routes")(app);
 require("./app/routes/contracts.routes")(app);
 require("./app/routes/opensea.routes")(app);
+require("./app/routes/guilds.routes")(app);
+require("./app/routes/members.routes")(app);
+require("./app/routes/members.apply.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8088;
