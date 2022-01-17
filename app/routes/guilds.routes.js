@@ -19,7 +19,10 @@ module.exports = app => {
   router.put("/:id", guilds.update);
 
   // Delete a Guild with id
-  router.delete("/:nftId", guilds.delete);
+  router.delete("/:id", guilds.delete);
+
+  // Delete a Guild with id
+  router.delete("/", guilds.deleteByFounder);
 
   // Delete all Guilds
   router.delete("/", guilds.deleteAll);

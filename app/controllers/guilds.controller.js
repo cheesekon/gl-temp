@@ -148,8 +148,36 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id
 
+  // Members.delete
+
   Guilds.destroy({
     where: { id: id }
+  })
+    .then((num) => {
+      if (num == 1) {
+        res.send({
+          code: 1,
+          message: 'Guild was deleted successfully!'
+        })
+      } else {
+        res.send({
+          code: 0,
+          message: `Cannot delete Guild with GuildsId=${GuildsId}. Maybe Guilds was not found!`
+        })
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        code: 0,
+        message: 'Could not delete Guilds with GuildsId=' + GuildsId
+      })
+    })
+}
+exports.deleteByFounder = (req, res) => {
+  const address = req.body.address
+
+  Guilds.destroy({
+    where: { founderAddress: address }
   })
     .then((num) => {
       if (num == 1) {
