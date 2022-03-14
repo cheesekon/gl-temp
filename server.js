@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 
 var corsOptions = {
-  origin: ["http://localhost:8081","https://gameland.bandot.io","http://101.36.113.47","http://gameland.network","https://gameland.network","https://testnet.gameland.network"]
+  origin: ["http://localhost:8081","http://101.36.113.47","http://gameland.network","https://gameland.network","https://dapp.gameland.network"]
 };
 
 app.use(cors(corsOptions));
