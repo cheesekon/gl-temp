@@ -4,6 +4,7 @@ module.exports = app => {
   var router = require("express").Router();
 
   router.get("/", opensea.getAll);
+  router.post("/", opensea.create);
 
   router.get("/details/:address/:nftId", opensea.details);
 
@@ -17,6 +18,7 @@ module.exports = app => {
 
   // Update a debt with id
   router.put("/:gamelandNftId", opensea.update);
+  router.delete("/:id", opensea.delete);
 
   app.use('/v0/opensea', router);
 };
